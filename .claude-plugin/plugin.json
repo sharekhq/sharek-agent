@@ -1,18 +1,17 @@
 {
-  "name": "postiz",
-  "version": "2.0.12",
+  "name": "sharek",
+  "version": "2.0.15",
   "description": "Social media automation CLI for scheduling posts, managing integrations, uploading media, and tracking analytics across 28+ platforms including X, LinkedIn, Reddit, YouTube, TikTok, Instagram, and more",
   "author": {
-    "name": "Nevo David",
-    "email": "nevo@postiz.com",
-    "url": "https://github.com/nevo-david"
+    "name": "Sharek",
+    "url": "https://github.com/sharekhq"
   },
-  "homepage": "https://docs.postiz.com/public-api/introduction",
-  "repository": "https://github.com/gitroomhq/postiz-agent",
+  "homepage": "https://github.com/sharekhq/sharek-agent#readme",
+  "repository": "https://github.com/sharekhq/sharek-agent",
   "license": "AGPL-3.0",
   "skills": ["./"],
   "keywords": [
-    "postiz",
+    "sharek",
     "social-media",
     "scheduling",
     "automation",

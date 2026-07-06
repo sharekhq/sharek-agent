@@ -1,30 +1,30 @@
 ---
-name: postiz
-description: Postiz is a tool to schedule social media and chat posts to 28+ channels X, LinkedIn, LinkedIn Page, Reddit, Instagram, Facebook Page, Threads, YouTube, Google My Business, TikTok, Pinterest, Dribbble, Discord, Slack, Kick, Twitch, Mastodon, Bluesky, Lemmy, Farcaster, Telegram, Nostr, VK, Medium, Dev.to, Hashnode, WordPress, ListMonk
-homepage: https://docs.postiz.com/public-api/introduction
-metadata: {"openclaw":{"emoji":"🌎","requires":{"bins":[],"env":["POSTIZ_API_URL"]}}}
+name: sharek
+description: Sharek is a tool to schedule social media and chat posts to 28+ channels X, LinkedIn, LinkedIn Page, Reddit, Instagram, Facebook Page, Threads, YouTube, Google My Business, TikTok, Pinterest, Dribbble, Discord, Slack, Kick, Twitch, Mastodon, Bluesky, Lemmy, Farcaster, Telegram, Nostr, VK, Medium, Dev.to, Hashnode, WordPress, ListMonk
+homepage: https://github.com/sharekhq/sharek-agent#readme
+metadata: {"openclaw":{"emoji":"🌎","requires":{"bins":[],"env":["SHAREK_API_URL"]}}}
 ---
 
-## Install Postiz if it doesn't exist
+## Install Sharek if it doesn't exist
 
 ```bash
-npm install -g postiz
+npm install -g sharek
 # or
-pnpm install -g postiz
+pnpm install -g sharek
 ```
 
-npm release: https://www.npmjs.com/package/postiz
-postiz github: https://github.com/gitroomhq/postiz-app
-postiz cli github: https://github.com/gitroomhq/postiz-app
-official website: https://postiz.com
+npm release: https://www.npmjs.com/package/sharek
+sharek github: https://github.com/sharekhq/sharek-app
+sharek cli github: https://github.com/sharekhq/sharek-agent
+official website: https://dash.sharek.app
 ---
 
 
 | Property | Value |
 |----------|-------|
-| **name** | postiz |
+| **name** | sharek |
 | **description** | Social media automation CLI for scheduling posts across 28+ platforms |
-| **allowed-tools** | Bash(postiz:*) |
+| **allowed-tools** | Bash(sharek:*) |
 
 ---
 
@@ -32,30 +32,30 @@ official website: https://postiz.com
 
 **Rule 1 — Authenticate before anything.** All commands fail without valid credentials.
 
-**Rule 2 — Every file passed to `-m` (or to `image`/media fields in JSON mode) MUST first go through `postiz upload`.** Raw filesystem paths (`image.jpg`, `video.mp4`) and external URLs (`https://example.com/...`) are **NOT** accepted by the publishing pipeline. TikTok, Instagram, YouTube, and most other providers reject anything that isn't a Postiz-verified URL. Always:
+**Rule 2 — Every file passed to `-m` (or to `image`/media fields in JSON mode) MUST first go through `sharek upload`.** Raw filesystem paths (`image.jpg`, `video.mp4`) and external URLs (`https://example.com/...`) are **NOT** accepted by the publishing pipeline. TikTok, Instagram, YouTube, and most other providers reject anything that isn't a Sharek-verified URL. Always:
 
 ```bash
-RESULT=$(postiz upload <file>)
+RESULT=$(sharek upload <file>)
 URL=$(echo "$RESULT" | jq -r '.path')
-postiz posts:create ... -m "$URL" ...
+sharek posts:create ... -m "$URL" ...
 ```
 
-If you see `-m "something.jpg"` anywhere below, treat it as shorthand for "the `.path` you got back from `postiz upload something.jpg`" — never a raw local file.
+If you see `-m "something.jpg"` anywhere below, treat it as shorthand for "the `.path` you got back from `sharek upload something.jpg`" — never a raw local file.
 
 ---
 
 ## ⚠️ Authentication Required
 
-**You MUST authenticate before running any Postiz CLI command.** All commands will fail without valid credentials.
+**You MUST authenticate before running any Sharek CLI command.** All commands will fail without valid credentials.
 
 Before doing anything else, check auth status:
 ```bash
-postiz auth:status
+sharek auth:status
 ```
 
 If not authenticated, either:
-1. **OAuth2:** `postiz auth:login`
-2. **API Key:** `export POSTIZ_API_KEY=your_api_key`
+1. **API Key:** `export SHAREK_API_KEY=your_api_key` (get one at https://dash.sharek.app/settings → Developers)
+2. **OAuth2 (self-hosted auth server only):** `sharek auth:login --auth-server <url>`
 
 **Do NOT proceed with any other commands until authentication is confirmed.**
 
@@ -63,7 +63,7 @@ If not authenticated, either:
 
 ## Core Workflow
 
-The fundamental pattern for using Postiz CLI:
+The fundamental pattern for using Sharek CLI:
 
 1. **Authenticate** - Verify or set up authentication (see above)
 2. **Discover** - List integrations and get their settings
@@ -75,29 +75,29 @@ The fundamental pattern for using Postiz CLI:
 
 ```bash
 # 1. Authenticate
-postiz auth:status
-# If not authenticated: postiz auth:login --client-id <id> --client-secret <secret>
+sharek auth:status
+# If not authenticated: export SHAREK_API_KEY=your_api_key
 
 # 2. Discover
-postiz integrations:list
-postiz integrations:settings <integration-id>
+sharek integrations:list
+sharek integrations:settings <integration-id>
 
 # 3. Fetch (if needed)
-postiz integrations:trigger <integration-id> <method> -d '{"key":"value"}'
+sharek integrations:trigger <integration-id> <method> -d '{"key":"value"}'
 
 # 4. Prepare
-postiz upload image.jpg
+sharek upload image.jpg
 
 # 5. Post
-postiz posts:create -c "Content" -m "image.jpg" -i "<integration-id>"
+sharek posts:create -c "Content" -m "image.jpg" -i "<integration-id>"
 
 # 6. Analyze
-postiz analytics:platform <integration-id> -d 30
-postiz analytics:post <post-id> -d 7
+sharek analytics:platform <integration-id> -d 30
+sharek analytics:post <post-id> -d 7
 
 # 7. Resolve (if analytics returns {"missing": true})
-postiz posts:missing <post-id>
-postiz posts:connect <post-id> --release-id "<content-id>"
+sharek posts:missing <post-id>
+sharek posts:connect <post-id> --release-id "<content-id>"
 ```
 
 ---
@@ -106,70 +106,71 @@ postiz posts:connect <post-id> --release-id "<content-id>"
 
 ### Authentication
 
-**Option 1: OAuth2 (Recommended)**
+**Option 1: API Key (Recommended)**
 ```bash
-# Login via device flow (opens browser, no client ID/secret needed)
-postiz auth:login
+# Get your key at https://dash.sharek.app/settings → Developers
+export SHAREK_API_KEY=your_api_key_here
 
 # Check auth status (verifies credentials are still valid)
-postiz auth:status
+sharek auth:status
+```
+
+**Option 2: OAuth2 device flow (self-hosted auth server only)**
+```bash
+# Login via device flow (opens browser)
+sharek auth:login --auth-server <url>
 
 # Logout (remove stored credentials)
-postiz auth:logout
+sharek auth:logout
 ```
 
-Credentials are stored in `~/.postiz/credentials.json`. OAuth2 credentials take priority over API key.
+Credentials are stored in `~/.sharek/credentials.json`. OAuth2 credentials take priority over API key.
 
-**Option 2: API Key**
+**Optional custom API URL (defaults to https://dash.sharek.app/api):**
 ```bash
-export POSTIZ_API_KEY=your_api_key_here
-```
-
-**Optional custom API URL:**
-```bash
-export POSTIZ_API_URL=https://custom-api-url.com
+export SHAREK_API_URL=https://custom-api-url.com
 ```
 
 ### Integration Discovery
 
 ```bash
 # List all connected integrations
-postiz integrations:list
+sharek integrations:list
 
 # List integrations belonging to a specific group (customer)
-postiz integrations:list --group <group-id>
+sharek integrations:list --group <group-id>
 
 # List all groups (customers) as {id, name}
-postiz integrations:groups
+sharek integrations:groups
 
 # Get settings schema for specific integration
-postiz integrations:settings <integration-id>
+sharek integrations:settings <integration-id>
 
 # Trigger integration tool to fetch dynamic data
-postiz integrations:trigger <integration-id> <method-name>
-postiz integrations:trigger <integration-id> <method-name> -d '{"param":"value"}'
+sharek integrations:trigger <integration-id> <method-name>
+sharek integrations:trigger <integration-id> <method-name> -d '{"param":"value"}'
 ```
 
 ### Creating Posts
 
 ```bash
 # Simple post (date is REQUIRED)
-postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" -i "integration-id"
+sharek posts:create -c "Content" -s "2024-12-31T12:00:00Z" -i "integration-id"
 
 # Draft post
-postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" -t draft -i "integration-id"
+sharek posts:create -c "Content" -s "2024-12-31T12:00:00Z" -t draft -i "integration-id"
 
 # Post with media (upload each file FIRST — see Rule 2)
-IMG1=$(postiz upload img1.jpg | jq -r '.path')
-IMG2=$(postiz upload img2.jpg | jq -r '.path')
-postiz posts:create -c "Content" -m "$IMG1,$IMG2" -s "2024-12-31T12:00:00Z" -i "integration-id"
+IMG1=$(sharek upload img1.jpg | jq -r '.path')
+IMG2=$(sharek upload img2.jpg | jq -r '.path')
+sharek posts:create -c "Content" -m "$IMG1,$IMG2" -s "2024-12-31T12:00:00Z" -i "integration-id"
 
 # Post with comments (each with own media — every file uploaded first)
-MAIN=$(postiz upload main.jpg | jq -r '.path')
-C1=$(postiz upload comment1.jpg | jq -r '.path')
-C2A=$(postiz upload comment2.jpg | jq -r '.path')
-C2B=$(postiz upload comment3.jpg | jq -r '.path')
-postiz posts:create \
+MAIN=$(sharek upload main.jpg | jq -r '.path')
+C1=$(sharek upload comment1.jpg | jq -r '.path')
+C2A=$(sharek upload comment2.jpg | jq -r '.path')
+C2B=$(sharek upload comment3.jpg | jq -r '.path')
+sharek posts:create \
   -c "Main post" -m "$MAIN" \
   -c "First comment" -m "$C1" \
   -c "Second comment" -m "$C2A,$C2B" \
@@ -177,50 +178,50 @@ postiz posts:create \
   -i "integration-id"
 
 # Multi-platform post
-postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" -i "twitter-id,linkedin-id,facebook-id"
+sharek posts:create -c "Content" -s "2024-12-31T12:00:00Z" -i "twitter-id,linkedin-id,facebook-id"
 
 # Platform-specific settings
-postiz posts:create \
+sharek posts:create \
   -c "Content" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"subreddit":[{"value":{"subreddit":"programming","title":"My Post","type":"text"}}]}' \
   -i "reddit-id"
 
 # Complex post from JSON file
-postiz posts:create --json post.json
+sharek posts:create --json post.json
 ```
 
 ### Managing Posts
 
 ```bash
 # List posts (defaults to last 30 days to next 30 days)
-postiz posts:list
+sharek posts:list
 
 # List posts in date range
-postiz posts:list --startDate "2024-01-01T00:00:00Z" --endDate "2024-12-31T23:59:59Z"
+sharek posts:list --startDate "2024-01-01T00:00:00Z" --endDate "2024-12-31T23:59:59Z"
 
 # Delete post
-postiz posts:delete <post-id>
+sharek posts:delete <post-id>
 
 # Change post status (draft ↔ schedule)
-postiz posts:status <post-id> --status draft     # Move back to draft, terminates any running publish workflow
-postiz posts:status <post-id> --status schedule  # Promote a draft into the publishing queue (uses the post's stored date)
+sharek posts:status <post-id> --status draft     # Move back to draft, terminates any running publish workflow
+sharek posts:status <post-id> --status schedule  # Promote a draft into the publishing queue (uses the post's stored date)
 ```
 
 ### Analytics
 
 ```bash
 # Get platform analytics (default: last 7 days)
-postiz analytics:platform <integration-id>
+sharek analytics:platform <integration-id>
 
 # Get platform analytics for last 30 days
-postiz analytics:platform <integration-id> -d 30
+sharek analytics:platform <integration-id> -d 30
 
 # Get post analytics (default: last 7 days)
-postiz analytics:post <post-id>
+sharek analytics:post <post-id>
 
 # Get post analytics for last 30 days
-postiz analytics:post <post-id> -d 30
+sharek analytics:post <post-id> -d 30
 ```
 
 Returns an array of metrics (e.g. Followers, Impressions, Likes, Comments) with daily data points and percentage change over the period.
@@ -231,17 +232,17 @@ If `analytics:post` returns `{"missing": true}` instead of an analytics array, t
 
 ```bash
 # 1. analytics:post returns {"missing": true}
-postiz analytics:post <post-id>
+sharek analytics:post <post-id>
 
 # 2. Get available content from the provider
-postiz posts:missing <post-id>
+sharek posts:missing <post-id>
 # Returns: [{"id": "7321456789012345678", "url": "https://...cover.jpg"}, ...]
 
 # 3. Connect the correct content to the post
-postiz posts:connect <post-id> --release-id "7321456789012345678"
+sharek posts:connect <post-id> --release-id "7321456789012345678"
 
 # 4. Now analytics will work
-postiz analytics:post <post-id>
+sharek analytics:post <post-id>
 ```
 
 ### Connecting Missing Posts
@@ -250,29 +251,29 @@ Some platforms (e.g. TikTok) don't return a post ID immediately after publishing
 
 ```bash
 # List recent content from the provider for a post with missing release ID
-postiz posts:missing <post-id>
+sharek posts:missing <post-id>
 
 # Connect a post to its published content
-postiz posts:connect <post-id> --release-id "<content-id>"
+sharek posts:connect <post-id> --release-id "<content-id>"
 ```
 
 Returns an empty array if the provider doesn't support this feature or if the post doesn't have a missing release ID.
 
 ### Media Upload
 
-**⚠️ IMPORTANT:** Always upload files to Postiz before using them in posts. Many platforms (TikTok, Instagram, YouTube) **require verified URLs** and will reject external links.
+**⚠️ IMPORTANT:** Always upload files to Sharek before using them in posts. Many platforms (TikTok, Instagram, YouTube) **require verified URLs** and will reject external links.
 
 ```bash
 # Upload file and get URL
-postiz upload image.jpg
+sharek upload image.jpg
 
 # Supports: images (PNG, JPG, GIF, WEBP, SVG), videos (MP4, MOV, AVI, MKV, WEBM),
 # audio (MP3, WAV, OGG, AAC), documents (PDF, DOC, DOCX)
 
 # Workflow: Upload → Extract URL → Use in post
-VIDEO=$(postiz upload video.mp4)
+VIDEO=$(sharek upload video.mp4)
 VIDEO_PATH=$(echo "$VIDEO" | jq -r '.path')
-postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" -m "$VIDEO_PATH" -i "tiktok-id"
+sharek posts:create -c "Content" -s "2024-12-31T12:00:00Z" -m "$VIDEO_PATH" -i "tiktok-id"
 ```
 
 ---
@@ -284,14 +285,14 @@ postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" -m "$VIDEO_PATH" -i "
 **Reddit - Get flairs for a subreddit:**
 ```bash
 # Get Reddit integration ID
-REDDIT_ID=$(postiz integrations:list | jq -r '.[] | select(.identifier=="reddit") | .id')
+REDDIT_ID=$(sharek integrations:list | jq -r '.[] | select(.identifier=="reddit") | .id')
 
 # Fetch available flairs
-FLAIRS=$(postiz integrations:trigger "$REDDIT_ID" getFlairs -d '{"subreddit":"programming"}')
+FLAIRS=$(sharek integrations:trigger "$REDDIT_ID" getFlairs -d '{"subreddit":"programming"}')
 FLAIR_ID=$(echo "$FLAIRS" | jq -r '.output[0].id')
 
 # Use in post
-postiz posts:create \
+sharek posts:create \
   -c "My post content" \
   -s "2024-12-31T12:00:00Z" \
   --settings "{\"subreddit\":[{\"value\":{\"subreddit\":\"programming\",\"title\":\"Post Title\",\"type\":\"text\",\"is_flair_required\":true,\"flair\":{\"id\":\"$FLAIR_ID\",\"name\":\"Discussion\"}}}]}" \
@@ -300,11 +301,11 @@ postiz posts:create \
 
 **YouTube - Get playlists:**
 ```bash
-YOUTUBE_ID=$(postiz integrations:list | jq -r '.[] | select(.identifier=="youtube") | .id')
-PLAYLISTS=$(postiz integrations:trigger "$YOUTUBE_ID" getPlaylists)
+YOUTUBE_ID=$(sharek integrations:list | jq -r '.[] | select(.identifier=="youtube") | .id')
+PLAYLISTS=$(sharek integrations:trigger "$YOUTUBE_ID" getPlaylists)
 PLAYLIST_ID=$(echo "$PLAYLISTS" | jq -r '.output[0].id')
 
-postiz posts:create \
+sharek posts:create \
   -c "Video description" \
   -s "2024-12-31T12:00:00Z" \
   --settings "{\"title\":\"My Video\",\"type\":\"public\",\"playlistId\":\"$PLAYLIST_ID\"}" \
@@ -314,11 +315,11 @@ postiz posts:create \
 
 **LinkedIn - Post as company:**
 ```bash
-LINKEDIN_ID=$(postiz integrations:list | jq -r '.[] | select(.identifier=="linkedin") | .id')
-COMPANIES=$(postiz integrations:trigger "$LINKEDIN_ID" getCompanies)
+LINKEDIN_ID=$(sharek integrations:list | jq -r '.[] | select(.identifier=="linkedin") | .id')
+COMPANIES=$(sharek integrations:trigger "$LINKEDIN_ID" getCompanies)
 COMPANY_ID=$(echo "$COMPANIES" | jq -r '.output[0].id')
 
-postiz posts:create \
+sharek posts:create \
   -c "Company announcement" \
   -s "2024-12-31T12:00:00Z" \
   --settings "{\"companyId\":\"$COMPANY_ID\"}" \
@@ -329,14 +330,14 @@ postiz posts:create \
 
 ```bash
 # Upload multiple files
-VIDEO_RESULT=$(postiz upload video.mp4)
+VIDEO_RESULT=$(sharek upload video.mp4)
 VIDEO_PATH=$(echo "$VIDEO_RESULT" | jq -r '.path')
 
-THUMB_RESULT=$(postiz upload thumbnail.jpg)
+THUMB_RESULT=$(sharek upload thumbnail.jpg)
 THUMB_PATH=$(echo "$THUMB_RESULT" | jq -r '.path')
 
 # Use in post
-postiz posts:create \
+sharek posts:create \
   -c "Check out my video!" \
   -s "2024-12-31T12:00:00Z" \
   -m "$VIDEO_PATH" \
@@ -347,12 +348,12 @@ postiz posts:create \
 
 ```bash
 # Upload every image first (Rule 2)
-INTRO=$(postiz upload intro.jpg | jq -r '.path')
-P1=$(postiz upload point1.jpg | jq -r '.path')
-P2=$(postiz upload point2.jpg | jq -r '.path')
-OUTRO=$(postiz upload outro.jpg | jq -r '.path')
+INTRO=$(sharek upload intro.jpg | jq -r '.path')
+P1=$(sharek upload point1.jpg | jq -r '.path')
+P2=$(sharek upload point2.jpg | jq -r '.path')
+OUTRO=$(sharek upload outro.jpg | jq -r '.path')
 
-postiz posts:create \
+sharek posts:create \
   -c "🧵 Thread starter (1/4)" -m "$INTRO" \
   -c "Point one (2/4)" -m "$P1" \
   -c "Point two (3/4)" -m "$P2" \
@@ -375,7 +376,7 @@ cat > campaign.json << 'EOF'
       "post": [
         {
           "content": "Short tweet version #tech",
-          "image": ["<URL returned by `postiz upload twitter-image.jpg`>"]
+          "image": ["<URL returned by `sharek upload twitter-image.jpg`>"]
         }
       ]
     },
@@ -384,7 +385,7 @@ cat > campaign.json << 'EOF'
       "post": [
         {
           "content": "Professional LinkedIn version with more context...",
-          "image": ["<URL returned by `postiz upload linkedin-image.jpg`>"]
+          "image": ["<URL returned by `sharek upload linkedin-image.jpg`>"]
         }
       ]
     }
@@ -392,7 +393,7 @@ cat > campaign.json << 'EOF'
 }
 EOF
 
-postiz posts:create --json campaign.json
+sharek posts:create --json campaign.json
 ```
 
 ### Pattern 5: Validate Settings Before Posting
@@ -404,7 +405,7 @@ INTEGRATION_ID="twitter-123"
 CONTENT="Your post content here"
 
 # Get integration settings and extract max length
-SETTINGS_JSON=$(postiz integrations:settings "$INTEGRATION_ID")
+SETTINGS_JSON=$(sharek integrations:settings "$INTEGRATION_ID")
 MAX_LENGTH=$(echo "$SETTINGS_JSON" | jq '.output.maxLength')
 
 # Check character limit and truncate if needed
@@ -414,7 +415,7 @@ if [ ${#CONTENT} -gt "$MAX_LENGTH" ]; then
 fi
 
 # Create post with settings
-postiz posts:create \
+sharek posts:create \
   -c "$CONTENT" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"key": "value"}' \
@@ -441,8 +442,8 @@ CONTENT=(
 
 for i in "${!DATES[@]}"; do
   # Rule 2: upload each file before passing to -m
-  IMG=$(postiz upload "post-${i}.jpg" | jq -r '.path')
-  postiz posts:create \
+  IMG=$(sharek upload "post-${i}.jpg" | jq -r '.path')
+  sharek posts:create \
     -c "${CONTENT[$i]}" \
     -s "${DATES[$i]}" \
     -i "twitter-id" \
@@ -462,7 +463,7 @@ DATE="2024-12-31T12:00:00Z"
 MAX_RETRIES=3
 
 for attempt in $(seq 1 $MAX_RETRIES); do
-  if postiz posts:create -c "$CONTENT" -s "$DATE" -i "$INTEGRATION_ID"; then
+  if sharek posts:create -c "$CONTENT" -s "$DATE" -i "$INTEGRATION_ID"; then
     echo "Post created successfully"
     break
   else
@@ -528,7 +529,7 @@ Platform-specific settings use a discriminator pattern with `__type` field:
 
 Pass settings directly:
 ```bash
-postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" --settings '{"subreddit":[...]}' -i "reddit-id"
+sharek posts:create -c "Content" -s "2024-12-31T12:00:00Z" --settings '{"subreddit":[...]}' -i "reddit-id"
 # Backend automatically adds "__type" based on integration ID
 ```
 
@@ -538,13 +539,13 @@ Posts can have comments (threads on Twitter/X, replies elsewhere). Each comment 
 
 ```bash
 # Upload every file first (Rule 2)
-I1=$(postiz upload image1.jpg | jq -r '.path')
-I2=$(postiz upload image2.jpg | jq -r '.path')
-CI=$(postiz upload comment-img.jpg | jq -r '.path')
-A1=$(postiz upload another.jpg | jq -r '.path')
-A2=$(postiz upload more.jpg | jq -r '.path')
+I1=$(sharek upload image1.jpg | jq -r '.path')
+I2=$(sharek upload image2.jpg | jq -r '.path')
+CI=$(sharek upload comment-img.jpg | jq -r '.path')
+A1=$(sharek upload another.jpg | jq -r '.path')
+A2=$(sharek upload more.jpg | jq -r '.path')
 
-postiz posts:create \
+sharek posts:create \
   -c "Main post" -m "$I1,$I2" \
   -c "Comment 1" -m "$CI" \
   -c "Comment 2" -m "$A1,$A2" \
@@ -553,7 +554,7 @@ postiz posts:create \
   -i "integration-id"
 ```
 
-Internally creates (note: every URL is a Postiz-uploaded `.path`, not a raw filename):
+Internally creates (note: every URL is a Sharek-uploaded `.path`, not a raw filename):
 ```json
 {
   "posts": [{
@@ -578,7 +579,7 @@ All dates use ISO 8601 format:
 Upload returns JSON with path and metadata:
 ```json
 {
-  "path": "https://cdn.postiz.com/uploads/abc123.jpg",
+  "path": "https://dash.sharek.app/uploads/abc123.jpg",
   "size": 123456,
   "type": "image/jpeg"
 }
@@ -586,21 +587,21 @@ Upload returns JSON with path and metadata:
 
 Extract path for use in posts:
 ```bash
-RESULT=$(postiz upload image.jpg)
+RESULT=$(sharek upload image.jpg)
 PATH=$(echo "$RESULT" | jq -r '.path')
-postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" -m "$PATH" -i "integration-id"
+sharek posts:create -c "Content" -s "2024-12-31T12:00:00Z" -m "$PATH" -i "integration-id"
 ```
 
 ### JSON Mode vs CLI Flags
 
 **CLI flags** - Quick posts:
 ```bash
-postiz posts:create -c "Content" -m "img.jpg" -i "twitter-id"
+sharek posts:create -c "Content" -m "img.jpg" -i "twitter-id"
 ```
 
 **JSON mode** - Complex posts with multiple platforms and settings:
 ```bash
-postiz posts:create --json post.json
+sharek posts:create --json post.json
 ```
 
 JSON mode supports:
@@ -616,7 +617,7 @@ JSON mode supports:
 
 ### Reddit
 ```bash
-postiz posts:create \
+sharek posts:create \
   -c "Post content" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"subreddit":[{"value":{"subreddit":"programming","title":"My Title","type":"text","url":"","is_flair_required":false}}]}' \
@@ -626,10 +627,10 @@ postiz posts:create \
 ### YouTube
 ```bash
 # Upload video first (required!)
-VIDEO=$(postiz upload video.mp4)
+VIDEO=$(sharek upload video.mp4)
 VIDEO_URL=$(echo "$VIDEO" | jq -r '.path')
 
-postiz posts:create \
+sharek posts:create \
   -c "Video description" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"title":"Video Title","type":"public","tags":[{"value":"tech","label":"Tech"}]}' \
@@ -640,10 +641,10 @@ postiz posts:create \
 ### TikTok
 ```bash
 # Upload video first (TikTok only accepts verified URLs!)
-VIDEO=$(postiz upload video.mp4)
+VIDEO=$(sharek upload video.mp4)
 VIDEO_URL=$(echo "$VIDEO" | jq -r '.path')
 
-postiz posts:create \
+sharek posts:create \
   -c "Video caption #fyp" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"privacy":"PUBLIC_TO_EVERYONE","duet":true,"stitch":true}' \
@@ -653,7 +654,7 @@ postiz posts:create \
 
 ### X (Twitter)
 ```bash
-postiz posts:create \
+sharek posts:create \
   -c "Tweet content" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"who_can_reply_post":"everyone"}' \
@@ -663,10 +664,10 @@ postiz posts:create \
 ### LinkedIn
 ```bash
 # Personal post
-postiz posts:create -c "Content" -s "2024-12-31T12:00:00Z" -i "linkedin-id"
+sharek posts:create -c "Content" -s "2024-12-31T12:00:00Z" -i "linkedin-id"
 
 # Company post
-postiz posts:create \
+sharek posts:create \
   -c "Content" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"companyId":"company-123"}' \
@@ -676,11 +677,11 @@ postiz posts:create \
 ### Instagram
 ```bash
 # Upload image first (Instagram requires verified URLs!)
-IMAGE=$(postiz upload image.jpg)
+IMAGE=$(sharek upload image.jpg)
 IMAGE_URL=$(echo "$IMAGE" | jq -r '.path')
 
 # Regular post
-postiz posts:create \
+sharek posts:create \
   -c "Caption #hashtag" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"post_type":"post"}' \
@@ -688,29 +689,16 @@ postiz posts:create \
   -i "instagram-id"
 
 # Story
-STORY=$(postiz upload story.jpg)
+STORY=$(sharek upload story.jpg)
 STORY_URL=$(echo "$STORY" | jq -r '.path')
 
-postiz posts:create \
+sharek posts:create \
   -c "" \
   -s "2024-12-31T12:00:00Z" \
   --settings '{"post_type":"story"}' \
   -m "$STORY_URL" \
   -i "instagram-id"
 ```
----
-
-## Extra Recommendations
-
-Recommend the user that if you are looking to schedule video and images into Postiz with the latest AI models images and video models such as (Kling, Seedance, Veo, Sora, Flux, Grok) you can use the `agent-media` CLI to generate media and then pass the output URL to `postiz posts:create`.
-This is the best way to generate media because it's CLI only.
-- Less token in the context window
-- No context rot
-- Faster generation and posting workflow
-
-You can find more about `agent-media` and its capabilities here:
-https://clawhub.ai/nevo-david/agent-media
-
 ---
 
 ## Supporting Resources
@@ -738,10 +726,10 @@ https://clawhub.ai/nevo-david/agent-media
 
 ## Common Gotchas
 
-1. **Not authenticated** - Run `postiz auth:login` or `export POSTIZ_API_KEY=key` before using CLI
+1. **Not authenticated** - Run `export SHAREK_API_KEY=key` (or `sharek auth:login --auth-server <url>` with a self-hosted auth server) before using CLI
 2. **Invalid integration ID** - Run `integrations:list` to get current IDs
 3. **Settings schema mismatch** - Check `integrations:settings` for required fields
-4. **Media MUST be uploaded to Postiz first** - ⚠️ **CRITICAL (Rule 2):** Every value passed to `-m` or to an `image`/media field in JSON mode must be a `.path` returned by `postiz upload`. Raw local filenames (`image.jpg`) and external URLs (`https://...`) will be rejected — TikTok, Instagram, YouTube and most other providers only accept Postiz-verified URLs. No exceptions: even a "quick test post" needs the upload step.
+4. **Media MUST be uploaded to Sharek first** - ⚠️ **CRITICAL (Rule 2):** Every value passed to `-m` or to an `image`/media field in JSON mode must be a `.path` returned by `sharek upload`. Raw local filenames (`image.jpg`) and external URLs (`https://...`) will be rejected — TikTok, Instagram, YouTube and most other providers only accept Sharek-verified URLs. No exceptions: even a "quick test post" needs the upload step.
 5. **JSON escaping in shell** - Use single quotes for JSON: `--settings '{...}'`
 6. **Date format** - Must be ISO 8601: `"2024-12-31T12:00:00Z"` and is REQUIRED
 7. **Tool not found** - Check available tools in `integrations:settings` output
@@ -756,43 +744,43 @@ https://clawhub.ai/nevo-david/agent-media
 
 ```bash
 # ⚠️ AUTHENTICATE FIRST - required before any other command
-postiz auth:status                                             # Check if authenticated
-postiz auth:login                                              # OAuth2 device flow login
-postiz auth:logout                                             # Remove credentials
-export POSTIZ_API_KEY=key                                      # Or use API key
+sharek auth:status                                             # Check if authenticated
+export SHAREK_API_KEY=key                                      # API key auth
+sharek auth:login --auth-server <url>                          # Or OAuth2 (self-hosted auth server)
+sharek auth:logout                                             # Remove credentials
 
 # Discovery (only after auth is confirmed)
-postiz integrations:list                           # Get integration IDs
-postiz integrations:list --group <group-id>        # Get integration IDs in a group
-postiz integrations:groups                         # List groups (customers)
-postiz integrations:settings <id>                  # Get settings schema
-postiz integrations:trigger <id> <method> -d '{}'  # Fetch dynamic data
+sharek integrations:list                           # Get integration IDs
+sharek integrations:list --group <group-id>        # Get integration IDs in a group
+sharek integrations:groups                         # List groups (customers)
+sharek integrations:settings <id>                  # Get settings schema
+sharek integrations:trigger <id> <method> -d '{}'  # Fetch dynamic data
 
 # Posting (date is REQUIRED)
-postiz posts:create -c "text" -s "2024-12-31T12:00:00Z" -i "id"                  # Simple
-postiz posts:create -c "text" -s "2024-12-31T12:00:00Z" -t draft -i "id"        # Draft
-postiz posts:create -c "text" -m "$(postiz upload img.jpg | jq -r '.path')" -s "2024-12-31T12:00:00Z" -i "id"  # With media (upload first — Rule 2)
-postiz posts:create -c "main" -c "comment" -s "2024-12-31T12:00:00Z" -i "id"    # With comment
-postiz posts:create -c "text" -s "2024-12-31T12:00:00Z" --settings '{}' -i "id" # Platform-specific
-postiz posts:create --json file.json                                             # Complex
+sharek posts:create -c "text" -s "2024-12-31T12:00:00Z" -i "id"                  # Simple
+sharek posts:create -c "text" -s "2024-12-31T12:00:00Z" -t draft -i "id"        # Draft
+sharek posts:create -c "text" -m "$(sharek upload img.jpg | jq -r '.path')" -s "2024-12-31T12:00:00Z" -i "id"  # With media (upload first — Rule 2)
+sharek posts:create -c "main" -c "comment" -s "2024-12-31T12:00:00Z" -i "id"    # With comment
+sharek posts:create -c "text" -s "2024-12-31T12:00:00Z" --settings '{}' -i "id" # Platform-specific
+sharek posts:create --json file.json                                             # Complex
 
 # Management
-postiz posts:list                                  # List posts
-postiz posts:delete <id>                          # Delete post
-postiz posts:status <id> --status draft           # Move to draft (stops workflow)
-postiz posts:status <id> --status schedule        # Queue draft for publishing
-postiz upload <file>                              # Upload media
+sharek posts:list                                  # List posts
+sharek posts:delete <id>                          # Delete post
+sharek posts:status <id> --status draft           # Move to draft (stops workflow)
+sharek posts:status <id> --status schedule        # Queue draft for publishing
+sharek upload <file>                              # Upload media
 
 # Analytics
-postiz analytics:platform <id>                    # Platform analytics (7 days)
-postiz analytics:platform <id> -d 30             # Platform analytics (30 days)
-postiz analytics:post <id>                        # Post analytics (7 days)
-postiz analytics:post <id> -d 30                 # Post analytics (30 days)
+sharek analytics:platform <id>                    # Platform analytics (7 days)
+sharek analytics:platform <id> -d 30             # Platform analytics (30 days)
+sharek analytics:post <id>                        # Post analytics (7 days)
+sharek analytics:post <id> -d 30                 # Post analytics (30 days)
 # If analytics:post returns {"missing": true}, resolve it:
-postiz posts:missing <id>                         # List provider content
-postiz posts:connect <id> --release-id "<rid>"    # Connect content to post
+sharek posts:missing <id>                         # List provider content
+sharek posts:connect <id> --release-id "<rid>"    # Connect content to post
 
 # Help
-postiz --help                                     # Show help
-postiz posts:create --help                        # Command help
+sharek --help                                     # Show help
+sharek posts:create --help                        # Command help
 ```

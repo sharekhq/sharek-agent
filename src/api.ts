@@ -1,17 +1,17 @@
 import fetch, { FormData } from 'node-fetch';
 
-export interface PostizConfig {
+export interface SharekConfig {
   apiKey: string;
   apiUrl?: string;
 }
 
-export class PostizAPI {
+export class SharekAPI {
   private apiKey: string;
   private apiUrl: string;
 
-  constructor(config: PostizConfig) {
+  constructor(config: SharekConfig) {
     this.apiKey = config.apiKey;
-    this.apiUrl = config.apiUrl || 'https://api.postiz.com';
+    this.apiUrl = config.apiUrl || 'https://dash.sharek.app/api';
   }
 
   private async request(endpoint: string, options: any = {}) {

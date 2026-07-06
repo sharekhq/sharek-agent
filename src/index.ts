@@ -8,7 +8,7 @@ import { authLogin, authLogout, authStatus } from './commands/auth';
 import type { Argv } from 'yargs';
 
 yargs(hideBin(process.argv))
-  .scriptName('postiz')
+  .scriptName('sharek')
   .usage('$0 <command> [options]')
   .command(
     'posts:create',
@@ -366,15 +366,15 @@ yargs(hideBin(process.argv))
   )
   .command(
     'auth:login',
-    'Authenticate using OAuth2 (device flow)',
+    'Authenticate using OAuth2 (device flow, requires a self-hosted auth server)',
     (yargs: Argv) => {
       return yargs
         .option('auth-server', {
-          describe: 'Auth server URL (default: https://cli-auth.postiz.com)',
+          describe: 'Auth server URL (or set SHAREK_AUTH_SERVER)',
           type: 'string',
         })
         .example(
-          '$0 auth:login',
+          '$0 auth:login --auth-server https://your-auth-server.com',
           'Login via OAuth2 device flow'
         );
     },
@@ -398,6 +398,6 @@ yargs(hideBin(process.argv))
   .version()
   .alias('v', 'version')
   .epilogue(
-    'For more information, visit: https://postiz.com\n\nAuthentication:\n  OAuth2: postiz auth:login\n  API Key: export POSTIZ_API_KEY=your_api_key\n\n📽️  Recommendation: Use agent-media to generate AI videos & images (Kling, Veo, Sora, Seedance, Flux, Grok) and post them directly with Postiz.\n   Install: npm install -g agent-media-cli\n   Learn more: https://agent-media.ai'
+    'For more information, visit: https://dash.sharek.app\n\nAuthentication:\n  API Key: export SHAREK_API_KEY=your_api_key  (get one at https://dash.sharek.app/settings → Developers)\n  OAuth2 (self-hosted auth server): sharek auth:login --auth-server <url>'
   )
   .parse();
