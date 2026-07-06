@@ -19,7 +19,7 @@
           ]
         },
         {
-          "content": "Step 1: Install the CLI and set your API key\n\nexport SHAREK_API_KEY=your_key\npnpm install -g sharek (2/5)",
+          "content": "Step 1: Install the CLI and set your API key\n\nexport SHAREK_API_KEY=your_key\npnpm install -g sharek-cli (2/5)",
           "image": [
             {
               "id": "tutorial2",

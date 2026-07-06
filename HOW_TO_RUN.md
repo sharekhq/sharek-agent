@@ -53,7 +53,7 @@ Once published to npm:
 
 ```bash
 # Install globally
-npm install -g sharek
+npm install -g sharek-cli
 
 # Or use with npx (no install)
 npx sharek --help
@@ -256,7 +256,7 @@ pnpm run publish
 
 ```bash
 # Global install
-npm install -g sharek
+npm install -g sharek-cli
 
 # Project-specific
 npm install sharek

@@ -240,7 +240,7 @@ pnpm run publish
 
 ### To Use in AI Agents
 
-1. Install: `npm install -g sharek`
+1. Install: `npm install -g sharek-cli`
 2. Set API key: `export SHAREK_API_KEY=your_key`
 3. Use commands programmatically
 4. Parse JSON output

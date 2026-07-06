@@ -1,5 +1,5 @@
 {
-  "name": "sharek",
+  "name": "sharek-cli",
   "version": "2.0.15",
   "description": "Sharek CLI - Command line interface for the Sharek social media scheduling API",
   "main": "dist/index.js",

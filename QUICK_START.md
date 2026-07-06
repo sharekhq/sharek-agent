@@ -35,7 +35,7 @@ sharek --help
 
 ```bash
 # Once published
-npm install -g sharek
+npm install -g sharek-cli
 
 # Or with pnpm
 pnpm add -g sharek

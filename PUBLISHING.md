@@ -1,6 +1,6 @@
 # Publishing the Sharek CLI to npm
 
-## Quick Publish (Current Name: "sharek")
+## Quick Publish (Current Name: "sharek-cli")
 
 ```bash
 # From apps/cli directory
@@ -10,9 +10,9 @@ pnpm publish --access public
 
 Then users can install:
 ```bash
-npm install -g sharek
+npm install -g sharek-cli
 # or
-pnpm install -g sharek
+pnpm install -g sharek-cli
 
 # And use:
 sharek --help
@@ -74,7 +74,7 @@ sharek posts:create -c "Hello!" -i "twitter-123"
 
 1. **Same name:**
    ```json
-   "name": "sharek",
+   "name": "sharek-cli",
    "bin": { "sharek": "./dist/index.js" }
    ```
    Install: `npm i -g sharek`
@@ -159,7 +159,7 @@ npm view sharek
 
 Test installation:
 ```bash
-npm install -g sharek
+npm install -g sharek-cli
 sharek --version
 ```
 
@@ -264,7 +264,7 @@ npm pack
 # Test installing the tarball
 npm install -g ./sharek-1.0.0.tgz
 sharek --help
-npm uninstall -g sharek
+npm uninstall -g sharek-cli
 ```
 
 ## Continuous Publishing
@@ -330,7 +330,7 @@ git push origin cli-v1.0.0
 
 - Check `"bin"` field is correct
 - Ensure `dist/index.js` has shebang: `#!/usr/bin/env node`
-- Try reinstalling: `npm uninstall -g sharek && npm install -g sharek`
+- Try reinstalling: `npm uninstall -g sharek-cli && npm install -g sharek-cli`
 
 ## Recommended Names
 
@@ -362,9 +362,9 @@ pnpm publish --access public
 **Users install:**
 
 ```bash
-npm install -g sharek
+npm install -g sharek-cli
 # or
-pnpm install -g sharek
+pnpm install -g sharek-cli
 ```
 
 **Users use:**

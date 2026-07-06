@@ -8,12 +8,12 @@ metadata: {"openclaw":{"emoji":"🌎","requires":{"bins":[],"env":["SHAREK_API_U
 ## Install Sharek if it doesn't exist
 
 ```bash
-npm install -g sharek
+npm install -g sharek-cli
 # or
-pnpm install -g sharek
+pnpm install -g sharek-cli
 ```
 
-npm release: https://www.npmjs.com/package/sharek
+npm release: https://www.npmjs.com/package/sharek-cli
 sharek github: https://github.com/sharekhq/sharek-app
 sharek cli github: https://github.com/sharekhq/sharek-agent
 official website: https://dash.sharek.app

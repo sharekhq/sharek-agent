@@ -19,9 +19,9 @@ The Sharek CLI provides a command-line interface to the [Sharek](https://dash.sh
 ### From npm (Recommended)
 
 ```bash
-npm install -g sharek
+npm install -g sharek-cli
 # or
-pnpm install -g sharek
+pnpm install -g sharek-cli
 ```
 
 ---
