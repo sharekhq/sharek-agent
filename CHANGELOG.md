@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Forked from [postiz-agent](https://github.com/gitroomhq/postiz-agent) 2.0.15 (commit `41c5a9d`) and rebranded for Sharek
 - Package/command renamed `postiz` → `sharek`; env vars `POSTIZ_*` → `SHAREK_*`; credentials moved to `~/.sharek/`
-- Default API URL is now `https://dash.sharek.app/api`
-- `auth:login` now requires `--auth-server <url>` or `SHAREK_AUTH_SERVER` (Sharek has no hosted CLI auth server yet); API key is the primary auth method
+- Default API URL is now `https://dash.sharek.app/api`; default auth server is `https://cli-auth.sharek.app`
+- Auth server (`server/`): Dockerfile added for container deployment; verify page restyled to Sharek brand colors
 
 Entries below this point are inherited from the upstream Postiz CLI changelog (rebranded names).
 

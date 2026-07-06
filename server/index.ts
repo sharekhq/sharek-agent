@@ -79,7 +79,7 @@ function json(res: ServerResponse, status: number, data: unknown) {
 function html(res: ServerResponse, status: number, body: string) {
   res.writeHead(status, { 'Content-Type': 'text/html' });
   res.end(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sharek CLI Auth</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a0a;color:#fff}.card{background:#141414;border:1px solid #262626;border-radius:12px;padding:48px;max-width:480px;text-align:center}h2{margin-bottom:16px;font-size:24px}p{color:#a0a0a0;margin-bottom:24px;line-height:1.5}.code{font-family:monospace;font-size:36px;font-weight:bold;letter-spacing:4px;background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:16px 32px;display:inline-block;margin:16px 0;color:#7c3aed}.btn{display:inline-block;background:#7c3aed;color:#fff;text-decoration:none;padding:12px 32px;border-radius:8px;font-size:16px;font-weight:500;border:none;cursor:pointer}.btn:hover{background:#6d28d9}.success{color:#22c55e}.error{color:#ef4444}</style></head><body><div class="card">${body}</div></body></html>`);
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a0a;color:#fff}.card{background:#141414;border:1px solid #262626;border-radius:12px;padding:48px;max-width:480px;text-align:center}h2{margin-bottom:16px;font-size:24px}p{color:#a0a0a0;margin-bottom:24px;line-height:1.5}.code{font-family:monospace;font-size:36px;font-weight:bold;letter-spacing:4px;background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:16px 32px;display:inline-block;margin:16px 0;color:#F0708A}.btn{display:inline-block;background:#B92D43;color:#fff;text-decoration:none;padding:12px 32px;border-radius:8px;font-size:16px;font-weight:500;border:none;cursor:pointer}.btn:hover{background:#9C2638}.success{color:#22c55e}.error{color:#ef4444}</style></head><body><div class="card">${body}</div></body></html>`);
 }
 
 async function parseBody(req: IncomingMessage): Promise<string> {
@@ -131,7 +131,7 @@ function handleVerifyPage(req: IncomingMessage, res: ServerResponse) {
     <p>Enter the code shown in your terminal:</p>
     <form method="POST" action="/device/verify">
       <input type="text" name="user_code" value="${prefilled}" placeholder="XXXX-XXXX"
-        style="font-family:monospace;font-size:24px;text-align:center;padding:12px 24px;border-radius:8px;border:1px solid #333;background:#1a1a2e;color:#fff;letter-spacing:4px;width:260px;margin-bottom:24px;text-transform:uppercase"
+        style="font-family:monospace;font-size:24px;text-align:center;padding:12px 24px;border-radius:8px;border:1px solid #333;background:#1a1a1a;color:#fff;letter-spacing:4px;width:260px;margin-bottom:24px;text-transform:uppercase"
         maxlength="9" autofocus required>
       <br>
       <button type="submit" class="btn">Authorize</button>

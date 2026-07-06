@@ -71,10 +71,17 @@ pnpm install
 # Development
 pnpm dev
 
-# Production
-pnpm build
-pnpm start:prod
+# Production (tsx runtime — `start:prod`'s CJS build can't load ESM-only node-fetch)
+pnpm start
 ```
+
+Or build the container image:
+
+```bash
+docker build -t sharek-cli-auth ./server
+```
+
+The `build-auth-server.yml` workflow builds and pushes `ghcr.io/sharekhq/sharek-cli-auth` on every push to `main` touching `server/`.
 
 ## Endpoints
 

@@ -54,8 +54,8 @@ sharek auth:status
 ```
 
 If not authenticated, either:
-1. **API Key:** `export SHAREK_API_KEY=your_api_key` (get one at https://dash.sharek.app/settings → Developers)
-2. **OAuth2 (self-hosted auth server only):** `sharek auth:login --auth-server <url>`
+1. **OAuth2:** `sharek auth:login`
+2. **API Key:** `export SHAREK_API_KEY=your_api_key` (get one at https://dash.sharek.app/settings → Developers)
 
 **Do NOT proceed with any other commands until authentication is confirmed.**
 
@@ -76,7 +76,7 @@ The fundamental pattern for using Sharek CLI:
 ```bash
 # 1. Authenticate
 sharek auth:status
-# If not authenticated: export SHAREK_API_KEY=your_api_key
+# If not authenticated: sharek auth:login (or export SHAREK_API_KEY=your_api_key)
 
 # 2. Discover
 sharek integrations:list
@@ -106,22 +106,22 @@ sharek posts:connect <post-id> --release-id "<content-id>"
 
 ### Authentication
 
-**Option 1: API Key (Recommended)**
+**Option 1: OAuth2 (Recommended)**
 ```bash
-# Get your key at https://dash.sharek.app/settings → Developers
-export SHAREK_API_KEY=your_api_key_here
+# Login via device flow (opens browser, no key to copy)
+sharek auth:login
 
 # Check auth status (verifies credentials are still valid)
 sharek auth:status
-```
-
-**Option 2: OAuth2 device flow (self-hosted auth server only)**
-```bash
-# Login via device flow (opens browser)
-sharek auth:login --auth-server <url>
 
 # Logout (remove stored credentials)
 sharek auth:logout
+```
+
+**Option 2: API Key**
+```bash
+# Get your key at https://dash.sharek.app/settings → Developers
+export SHAREK_API_KEY=your_api_key_here
 ```
 
 Credentials are stored in `~/.sharek/credentials.json`. OAuth2 credentials take priority over API key.
@@ -726,7 +726,7 @@ sharek posts:create \
 
 ## Common Gotchas
 
-1. **Not authenticated** - Run `export SHAREK_API_KEY=key` (or `sharek auth:login --auth-server <url>` with a self-hosted auth server) before using CLI
+1. **Not authenticated** - Run `sharek auth:login` or `export SHAREK_API_KEY=key` before using CLI
 2. **Invalid integration ID** - Run `integrations:list` to get current IDs
 3. **Settings schema mismatch** - Check `integrations:settings` for required fields
 4. **Media MUST be uploaded to Sharek first** - ⚠️ **CRITICAL (Rule 2):** Every value passed to `-m` or to an `image`/media field in JSON mode must be a `.path` returned by `sharek upload`. Raw local filenames (`image.jpg`) and external URLs (`https://...`) will be rejected — TikTok, Instagram, YouTube and most other providers only accept Sharek-verified URLs. No exceptions: even a "quick test post" needs the upload step.
@@ -745,9 +745,9 @@ sharek posts:create \
 ```bash
 # ⚠️ AUTHENTICATE FIRST - required before any other command
 sharek auth:status                                             # Check if authenticated
-export SHAREK_API_KEY=key                                      # API key auth
-sharek auth:login --auth-server <url>                          # Or OAuth2 (self-hosted auth server)
+sharek auth:login                                              # OAuth2 device flow login
 sharek auth:logout                                             # Remove credentials
+export SHAREK_API_KEY=key                                      # Or use API key
 
 # Discovery (only after auth is confirmed)
 sharek integrations:list                           # Get integration IDs

@@ -28,25 +28,12 @@ pnpm install -g sharek
 
 ## Authentication
 
-### Option 1: API Key (Recommended)
+### Option 1: OAuth2 (Recommended)
 
-Get your API key at [dash.sharek.app/settings](https://dash.sharek.app/settings) → Developers:
-
-```bash
-export SHAREK_API_KEY=your_api_key_here
-```
+Authenticate using the device flow — no key to copy:
 
 ```bash
-# Check current auth status (verifies credentials are still valid)
-sharek auth:status
-```
-
-### Option 2: OAuth2 device flow (self-hosted auth server)
-
-Sharek does not currently run a hosted CLI auth server. If you self-host the OAuth2 device flow server (see [`server/SERVER.md`](./server/SERVER.md)), authenticate with:
-
-```bash
-sharek auth:login --auth-server https://your-auth-server.com
+sharek auth:login
 ```
 
 This will:
@@ -55,8 +42,23 @@ This will:
 3. Automatically save credentials to `~/.sharek/credentials.json`
 
 ```bash
+# Check current auth status (verifies credentials are still valid)
+sharek auth:status
+
 # Remove stored credentials
 sharek auth:logout
+```
+
+#### Self-Hosting the Auth Server
+
+By default, `sharek auth:login` uses the hosted auth server at `cli-auth.sharek.app`. If you want to self-host the OAuth2 device flow server, follow the guide in [`server/SERVER.md`](./server/SERVER.md) and point the CLI at it with `--auth-server <url>` or `SHAREK_AUTH_SERVER`.
+
+### Option 2: API Key
+
+Get your API key at [dash.sharek.app/settings](https://dash.sharek.app/settings) → Developers:
+
+```bash
+export SHAREK_API_KEY=your_api_key_here
 ```
 
 **Optional:** Custom API endpoint
@@ -580,9 +582,9 @@ The CLI interacts with these Sharek API endpoints:
 |----------|----------|---------|-------------|
 | `SHAREK_API_KEY` | No* | - | Your Sharek API key |
 | `SHAREK_API_URL` | No | `https://dash.sharek.app/api` | Custom API endpoint |
-| `SHAREK_AUTH_SERVER` | No | - | Self-hosted auth server URL (for `auth:login`) |
+| `SHAREK_AUTH_SERVER` | No | `https://cli-auth.sharek.app` | Custom auth server URL |
 
-*Either `SHAREK_API_KEY` or OAuth2 (via `sharek auth:login` against a self-hosted auth server) is required.
+*Either OAuth2 (via `sharek auth:login`) or `SHAREK_API_KEY` is required.
 
 ---
 
@@ -597,7 +599,7 @@ The CLI provides clear error messages with exit codes:
 
 | Error | Solution |
 |-------|----------|
-| `Not authenticated` | Set `SHAREK_API_KEY` (or run `sharek auth:login --auth-server <url>`) |
+| `Not authenticated` | Run `sharek auth:login` or set `SHAREK_API_KEY` |
 | `Integration not found` | Run `integrations:list` to get valid IDs |
 | `startDate/endDate required` | Use ISO 8601 format: `"2024-12-31T12:00:00Z"` |
 | `Invalid settings` | Check `integrations:settings` for required fields |
@@ -656,10 +658,10 @@ Output in `dist/`:
 
 ```bash
 # Authentication
-export SHAREK_API_KEY=your_key                                 # API key auth
+sharek auth:login                                              # OAuth2 device flow
 sharek auth:status                                             # Check auth
-sharek auth:login --auth-server <url>                          # Or OAuth2 (self-hosted auth server)
 sharek auth:logout                                             # Remove credentials
+export SHAREK_API_KEY=your_key                                 # Or use API key
 
 # Discovery
 sharek integrations:list                           # List integrations

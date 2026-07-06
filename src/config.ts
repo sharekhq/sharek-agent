@@ -18,8 +18,8 @@ export function getConfig(): SharekConfig {
   if (!apiKey) {
     console.error('❌ Error: No authentication found.');
     console.error('Options:');
-    console.error('  1. API Key: export SHAREK_API_KEY=your_api_key  (get one at https://dash.sharek.app/settings → Developers)');
-    console.error('  2. OAuth2 (self-hosted auth server): sharek auth:login --auth-server <url>');
+    console.error('  1. OAuth2: sharek auth:login');
+    console.error('  2. API Key: export SHAREK_API_KEY=your_api_key  (get one at https://dash.sharek.app/settings → Developers)');
     process.exit(1);
   }
 

@@ -366,15 +366,15 @@ yargs(hideBin(process.argv))
   )
   .command(
     'auth:login',
-    'Authenticate using OAuth2 (device flow, requires a self-hosted auth server)',
+    'Authenticate using OAuth2 (device flow)',
     (yargs: Argv) => {
       return yargs
         .option('auth-server', {
-          describe: 'Auth server URL (or set SHAREK_AUTH_SERVER)',
+          describe: 'Auth server URL (default: https://cli-auth.sharek.app)',
           type: 'string',
         })
         .example(
-          '$0 auth:login --auth-server https://your-auth-server.com',
+          '$0 auth:login',
           'Login via OAuth2 device flow'
         );
     },
@@ -398,6 +398,6 @@ yargs(hideBin(process.argv))
   .version()
   .alias('v', 'version')
   .epilogue(
-    'For more information, visit: https://dash.sharek.app\n\nAuthentication:\n  API Key: export SHAREK_API_KEY=your_api_key  (get one at https://dash.sharek.app/settings → Developers)\n  OAuth2 (self-hosted auth server): sharek auth:login --auth-server <url>'
+    'For more information, visit: https://dash.sharek.app\n\nAuthentication:\n  OAuth2: sharek auth:login\n  API Key: export SHAREK_API_KEY=your_api_key  (get one at https://dash.sharek.app/settings → Developers)'
   )
   .parse();

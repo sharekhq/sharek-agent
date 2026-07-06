@@ -1,0 +1,52 @@
+---
+name: Build CLI Auth Server
+
+# Builds the OAuth2 device-flow auth server image (server/) and pushes it to
+# GHCR for Coolify to pull. The CLI's `sharek auth:login` talks to this
+# service at https://cli-auth.sharek.app.
+#
+# The image is environment-agnostic: client id/secret, DATABASE_URL and URLs
+# are read at runtime from Coolify env.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+      - '.github/workflows/build-auth-server.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: server
+          file: server/Dockerfile
+          platforms: linux/amd64
+          push: true
+          pull: true
+          provenance: false
+          sbom: false
+          tags: |
+            ghcr.io/sharekhq/sharek-cli-auth:latest
+            ghcr.io/sharekhq/sharek-cli-auth:${{ github.sha }}
